@@ -16,26 +16,6 @@
 
 ---
 
-<h2 align="center">🤝 Let's Connect</h2>
-
-<p align="center">
-
-<a href="https://linkedin.com/in/satyaranjan-behera-532a422a9">
-<img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
-</a>
-
-<a href="mailto:satyabhr2005@gmail.com">
-<img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
-</a>
-
-<a href="https://github.com/SaTyAbHr2005">
-<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/>
-</a>
-
-</p>
-
----
-
 # 🚀 Tech Stack
 
 ### Programming Languages
@@ -87,20 +67,72 @@
 
 # 📊 GitHub Stats
 
-![](https://github-readme-stats.vercel.app/api?username=satyabhr2005&show_icons=true&theme=shadow_blue)
+<p align="center">
 
-![](https://github-readme-streak-stats.herokuapp.com/?user=satyabhr2005&theme=shadow_blue)
+<img height="170" src="https://github-readme-stats.vercel.app/api?username=satyabhr2005&show_icons=true&theme=shadow_blue"/>
 
-![](https://github-readme-stats.vercel.app/api/top-langs/?username=satyabhr2005&layout=compact&theme=shadow_blue)
+<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=satyabhr2005&layout=compact&theme=shadow_blue"/>
+
+</p>
+
+<p align="center">
+
+<img height="170" src="https://github-readme-streak-stats.herokuapp.com/?user=satyabhr2005&theme=shadow_blue"/>
+
+</p>
 
 ---
 
-
-[![](https://visitcount.itsvg.in/api?id=satyabhr2005&icon=2&color=0)](https://visitcount.itsvg.in)
-
-
-## 🐍 Contribution Snake
+# 🧠 LeetCode Activity
 
 <p align="center">
-<img src="https://github.com/SaTyAbHr2005/SaTyAbHr2005/blob/output/ocean.gif"/>
+
+<img src="https://leetcard.jacoblin.cool/Satya252005?theme=dark&font=Nunito&ext=contest"/>
+
+</p>
+
+---
+
+# 🔥 LeetCode Heatmap
+
+<p align="center">
+
+<img src="https://leetcode-stats-six.vercel.app/?username=Satya252005&theme=dark"/>
+
+</p>
+
+---
+
+# 📈 Contribution Activity
+
+[![Satya's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=satyabhr2005&theme=tokyo-night)](https://github.com/SaTyAbHr2005)
+
+---
+
+<h2 align="center">🤝 Let's Connect</h2>
+
+<p align="center">
+
+<a href="https://linkedin.com/in/satyaranjan-behera-532a422a9">
+<img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
+
+<a href="mailto:satyabhr2005@gmail.com">
+<img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+</a>
+
+<a href="https://github.com/SaTyAbHr2005">
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
+
+<a href="https://leetcode.com/u/Satya252005/">
+<img src="https://img.shields.io/badge/LeetCode-F79F1B?style=for-the-badge&logo=leetcode&logoColor=black"/>
+</a>
+
+</p>
+
+---
+
+<p align="center">
+<img src="https://visitcount.itsvg.in/api?id=satyabhr2005&icon=2&color=0"/>
 </p>

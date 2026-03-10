@@ -1,5 +1,5 @@
 <h1 align="center">Hi 👋, I'm Satyaranjan Behera</h1>
-<h3 align="center">Computer Engineering Student | Exploring Artificial Intelligence, Machine Learning, and Automation</h3>
+<h3 align="center">Computer Engineering Student | Exploring Artificial Intelligence, Machine Learning, and DevOps</h3>
 
 <p align="center">
 <img src="https://komarev.com/ghpvc/?username=SaTyAbHr2005&label=Profile%20views&color=0e75b6&style=flat"/>
@@ -10,9 +10,9 @@
 ## 👨‍💻 About Me
 
 - 🎓 Computer Engineering Student  
-- 🤖 Interested in **Artificial Intelligence, Machine Learning, and Automation**  
+- 🤖 Interested in **Artificial Intelligence, Machine Learning, and DevOps**  
 - ⚙️ Exploring **Cloud technologies, automation, and scalable systems**  
-- 💡 Passionate about building real-world software and AI applications  
+- 💡 Passionate about building **real-world AI and software applications**
 
 ---
 
@@ -77,7 +77,7 @@
 
 <p align="center">
 
-<img height="170" src="https://streak-stats.demolab.com?user=SaTyAbHr2005&theme=tokyonight"/>
+<img height="160" src="https://streak-stats.demolab.com?user=SaTyAbHr2005&theme=tokyonight"/>
 
 </p>
 
@@ -99,6 +99,14 @@
 
 <img src="https://github-readme-activity-graph.vercel.app/graph?username=SaTyAbHr2005&theme=tokyo-night"/>
 
+</p>
+
+---
+
+## 🐍 Contribution Snake
+
+<p align="center">
+<img src="https://github.com/SaTyAbHr2005/SaTyAbHr2005/blob/output/github-contribution-grid-snake-dark.svg"/>
 </p>
 
 ---

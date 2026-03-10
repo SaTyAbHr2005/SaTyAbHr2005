@@ -1,9 +1,6 @@
 <h1 align="center">Hi 👋, I'm Satyaranjan Behera</h1>
 <h3 align="center">Computer Engineering Student | Exploring Artificial Intelligence, Machine Learning, and Automation</h3>
 
-<p align="center">
-<img src="https://komarev.com/ghpvc/?username=SaTyAbHr2005&label=Profile%20views&color=0e75b6&style=flat"/>
-</p>
 
 ---
 
@@ -68,10 +65,11 @@
 ## 📊 GitHub Analytics
 
 <p align="center">
-  <a href="https://github.com/SaTyAbHr2005">
-    <img height="170em" src="https://github-readme-stats.vercel.app/api?username=SaTyAbHr2005&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true"/>
-    <img height="170em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=SaTyAbHr2005&layout=compact&langs_count=8&theme=tokyonight"/>
-  </a>
+
+<img height="170" src="https://github-readme-stats.vercel.app/api?username=SaTyAbHr2005&show_icons=true&theme=tokyonight&count_private=true"/>
+
+<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=SaTyAbHr2005&layout=compact&langs_count=8&theme=tokyonight"/>
+
 </p>
 
 <p align="center">
@@ -82,10 +80,6 @@
   <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=SaTyAbHr2005&theme=tokyonight"/>
 </p>
 
-<p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=SaTyAbHr2005&theme=tokyonight"/>
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=SaTyAbHr2005&theme=tokyonight"/>
-</p>
 
 # 🔥 LeetCode Heatmap
 
@@ -128,5 +122,5 @@
 ---
 
 <p align="center">
-<img src="https://visitcount.itsvg.in/api?id=SaTyAbHr2005&icon=2&color=0"/>
+  <img src="https://komarev.com/ghpvc/?username=SaTyAbHr2005&label=Profile%20views&color=blue&style=flat"/>
 </p>

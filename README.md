@@ -1,5 +1,5 @@
 <h1 align="center">Hi 👋, I'm Satyaranjan Behera</h1>
-<h3 align="center">Computer Engineering Student | Exploring Artificial Intelligence, Machine Learning, and DevOps</h3>
+<h3 align="center">Computer Engineering Student | Exploring Artificial Intelligence, Machine Learning, and Automation</h3>
 
 <p align="center">
 <img src="https://komarev.com/ghpvc/?username=SaTyAbHr2005&label=Profile%20views&color=0e75b6&style=flat"/>
@@ -10,7 +10,7 @@
 ## 👨‍💻 About Me
 
 - 🎓 Computer Engineering Student  
-- 🤖 Interested in **Artificial Intelligence, Machine Learning, and DevOps**  
+- 🤖 Interested in **Artificial Intelligence, Machine Learning, and Automation**  
 - ⚙️ Exploring **Cloud technologies, automation, and scalable systems**  
 - 💡 Passionate about building **real-world AI and software applications**
 

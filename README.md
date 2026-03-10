@@ -2,7 +2,7 @@
 <h3 align="center">Computer Engineering Student | Exploring Artificial Intelligence, Machine Learning, and Automation</h3>
 
 <p align="center">
-<img src="https://komarev.com/ghpvc/?username=satyabhr2005&label=Profile%20views&color=0e75b6&style=flat" alt="profile views"/>
+<img src="https://komarev.com/ghpvc/?username=SaTyAbHr2005&label=Profile%20views&color=0e75b6&style=flat"/>
 </p>
 
 ---
@@ -11,7 +11,7 @@
 
 - 🎓 Computer Engineering Student  
 - 🤖 Interested in **Artificial Intelligence, Machine Learning, and Automation**  
-- 🔐 Exploring **Cybersecurity and AI-driven systems**  
+- ⚙️ Exploring **Cloud technologies, automation, and scalable systems**  
 - 💡 Passionate about building real-world software and AI applications  
 
 ---
@@ -69,25 +69,15 @@
 
 <p align="center">
 
-<img height="170" src="https://github-readme-stats.vercel.app/api?username=satyabhr2005&show_icons=true&theme=shadow_blue"/>
+<img height="170" src="https://github-readme-stats.vercel.app/api?username=SaTyAbHr2005&show_icons=true&theme=tokyonight"/>
 
-<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=satyabhr2005&layout=compact&theme=shadow_blue"/>
+<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=SaTyAbHr2005&layout=compact&theme=tokyonight"/>
 
 </p>
 
 <p align="center">
 
-<img height="170" src="https://github-readme-streak-stats.herokuapp.com/?user=satyabhr2005&theme=shadow_blue"/>
-
-</p>
-
----
-
-# 🧠 LeetCode Activity
-
-<p align="center">
-
-<img src="https://leetcard.jacoblin.cool/Satya252005?theme=dark&font=Nunito&ext=contest"/>
+<img height="170" src="https://streak-stats.demolab.com?user=SaTyAbHr2005&theme=tokyonight"/>
 
 </p>
 
@@ -97,15 +87,19 @@
 
 <p align="center">
 
-<img src="https://leetcode-stats-six.vercel.app/?username=Satya252005&theme=dark"/>
+<img src="https://leetcode-stats.vercel.app/api?username=Satya252005&theme=dark"/>
 
 </p>
 
 ---
 
-# 📈 Contribution Activity
+# 📈 GitHub Contribution Graph
 
-[![Satya's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=satyabhr2005&theme=tokyo-night)](https://github.com/SaTyAbHr2005)
+<p align="center">
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=SaTyAbHr2005&theme=tokyo-night"/>
+
+</p>
 
 ---
 
@@ -134,5 +128,5 @@
 ---
 
 <p align="center">
-<img src="https://visitcount.itsvg.in/api?id=satyabhr2005&icon=2&color=0"/>
+<img src="https://visitcount.itsvg.in/api?id=SaTyAbHr2005&icon=2&color=0"/>
 </p>

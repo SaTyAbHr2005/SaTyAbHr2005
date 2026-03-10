@@ -65,40 +65,32 @@
 
 ---
 
-# 📊 GitHub Stats
+## 📊 GitHub Analytics
 
 <p align="center">
-
-<img height="170" src="https://github-readme-stats.vercel.app/api?username=SaTyAbHr2005&show_icons=true&theme=tokyonight"/>
-
-<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=SaTyAbHr2005&layout=compact&theme=tokyonight"/>
-
+  <a href="https://github.com/SaTyAbHr2005">
+    <img height="170em" src="https://github-readme-stats.vercel.app/api?username=SaTyAbHr2005&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true"/>
+    <img height="170em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=SaTyAbHr2005&layout=compact&langs_count=8&theme=tokyonight"/>
+  </a>
 </p>
 
 <p align="center">
-
-<img height="160" src="https://streak-stats.demolab.com?user=SaTyAbHr2005&theme=tokyonight"/>
-
+  <img height="170em" src="https://streak-stats.demolab.com?user=SaTyAbHr2005&theme=tokyonight"/>
 </p>
 
----
+<p align="center">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=SaTyAbHr2005&theme=tokyonight"/>
+</p>
+
+<p align="center">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=SaTyAbHr2005&theme=tokyonight"/>
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=SaTyAbHr2005&theme=tokyonight"/>
+</p>
 
 # 🔥 LeetCode Heatmap
 
 <p align="center">
-
-<img src="https://leetcode-stats.vercel.app/api?username=Satya252005&theme=dark"/>
-
-</p>
-
----
-
-# 📈 GitHub Contribution Graph
-
-<p align="center">
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=SaTyAbHr2005&theme=tokyo-night"/>
-
+<img src="https://leetcard.jacoblin.cool/Satya252005?theme=dark&font=Nunito&ext=heatmap"/>
 </p>
 
 ---

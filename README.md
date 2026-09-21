@@ -1,6 +1,8 @@
 <h1 align="center">Hi 👋, I'm Satyaranjan Behera</h1>
 <h3 align="center">Computer Engineering Student | Exploring Artificial Intelligence, Machine Learning, and Automation</h3>
-
+<p align="center">
+  🌐 <b>Portfolio:</b> <a href="https://satyaranjan.vercel.app/">satyaranjan.vercel.app</a>
+</p>
 
 ---
 

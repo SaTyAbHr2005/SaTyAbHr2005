@@ -504,11 +504,6 @@ def cards(d):
                f'<text x="{x+20}" y="{y+32}" fill="{MUTED}" font-family="{MONO}" font-size="11">0{i+1}</text>'
                f'<circle cx="{x+52}" cy="{y+28}" r="5" fill="{LANG_COLORS.get(lang, MUTED)}"/>'
                f'<text x="{x+62}" y="{y+32}" fill="{MUTED}" font-family="{MONO}" font-size="11">{esc(lang)}</text>')
-        if badge:
-            bc = YELLOW if "IEEE" in badge else GREEN
-            bw = len(badge) * (10 * MONO_W + 1) + 22
-            out += (f'<rect class="glow" x="{x+cw-20-bw:.0f}" y="{y+16}" width="{bw:.0f}" height="22" rx="11" fill="{bc}" fill-opacity=".14" stroke="{bc}" stroke-opacity=".6"/>'
-                    f'<text x="{x+cw-20-bw/2:.0f}" y="{y+31}" text-anchor="middle" fill="{bc}" font-family="{MONO}" font-size="10" letter-spacing="1">{esc(badge)}</text>')
         out += f'<text x="{x+20}" y="{y+70}" fill="{TEXT}" font-family="{DISP}" font-size="24" font-weight="800">{esc(name)}</text>'
         per_line = int((cw - 40) / (11.5 * MONO_W))
         for j, line in enumerate(textwrap.wrap(desc, per_line)[:3]):
@@ -521,6 +516,16 @@ def cards(d):
             tx += tw + 8
         out += f'<text class="arrow" x="{x+cw-22}" y="{y+ch-24}" text-anchor="end" fill="{MUTED}" font-family="{MONO}" font-size="16">↗</text></g>'
         files[f"card-{i+1}.svg"] = svg(cw + 2 * m, ch + 2 * m, name, out, css)
+    # clickable pills shown under each card (each image carries its own link in the README)
+    for fname, label, col, dot in (("pill-live.svg", "LIVE", GREEN, True), ("pill-paper.svg", "IEEE PAPER", YELLOW, False),
+                                   ("pill-repo.svg", "REPO", BLUE, False)):
+        text = label + " ↗"
+        w = round(len(text) * (12 * MONO_W + 1) + (44 if dot else 28))
+        tx = 30 if dot else 14
+        pill = (f'<rect class="glow" x="1" y="1" width="{w-2}" height="30" rx="15" fill="{col}" fill-opacity=".14" stroke="{col}" stroke-opacity=".7"/>'
+                + (f'<circle class="pulse" cx="17" cy="16" r="4.5" fill="{col}"/>' if dot else "")
+                + f'<text x="{tx}" y="21" fill="{col}" font-family="{MONO}" font-size="12" letter-spacing="1">{esc(text)}</text>')
+        files[fname] = svg(w, 32, label, pill, "@keyframes glow{50%{fill-opacity:.3}}.glow{animation:glow 2.4s ease-in-out infinite}")
     return files
 
 

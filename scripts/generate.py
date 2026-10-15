@@ -611,22 +611,78 @@ def snake(d):
     return svg(W, H, "Contribution snake", body)
 
 
+def octicon(name, x, y, size, color):
+    raw = get(f"https://cdn.jsdelivr.net/npm/@primer/octicons@19/build/svg/{name}-16.svg", raw=True).decode()
+    paths = "".join(f'<path d="{p}"/>' for p in re.findall(r' d="([^"]+)"', raw))
+    return f'<g transform="translate({x} {y}) scale({size/16})" fill="{color}">{paths}</g>'
+
+
 def social(_d):
-    W, H = 1000, 360
-    lines = [
-        (f'<tspan fill="{MUTED}">PING satya (</tspan><tspan fill="{GREEN}">open-to-work</tspan><tspan fill="{MUTED}">): 3 channels</tspan>'),
-        (f'64 bytes from <tspan fill="{BLUE}">portfolio</tspan>  satyaranjan.vercel.app       <tspan fill="{MUTED}">time=0.42 ms</tspan>'),
-        (f'64 bytes from <tspan fill="{BLUE}">linkedin</tspan>   in/satyaranjan-behera        <tspan fill="{MUTED}">time=0.38 ms</tspan>'),
-        (f'64 bytes from <tspan fill="{BLUE}">email</tspan>      satyabhr2005@gmail.com       <tspan fill="{MUTED}">time=0.51 ms</tspan>'),
-        (f'<tspan fill="{MUTED}">--- 3 packets transmitted, 3 received, </tspan><tspan fill="{GREEN}">0% packet loss</tspan><tspan fill="{MUTED}"> ---</tspan>'),
-        (f'<tspan fill="{GREEN}">✓ connection open.</tspan> Have an idea worth building? Let\'s talk.'),
-    ]
-    rows = "".join(f'<g class="p{i}"><text x="40" y="{104+i*28}" xml:space="preserve" fill="{TEXT}" font-size="14">{l}</text></g>' for i, l in enumerate(lines))
-    defs = f'<clipPath id="cmd"><rect x="58" y="56" height="20" width="0"><animate attributeName="width" values="0;0;260;260" keyTimes="0;.02;.1;1" dur="14s" repeatCount="indefinite"/></rect></clipPath>'
-    body = (window(W, H, "satya@github: ~") + f'<g font-family="{MONO}">'
-            f'<text x="40" y="70" font-size="14" fill="{GREEN}">➜</text><text x="60" y="70" font-size="14" fill="{TEXT}" clip-path="url(#cmd)">ping satya --channels</text>'
-            f'{rows}<text x="40" y="{H-24}" font-size="14"><tspan fill="{GREEN}">➜</tspan><tspan class="blink" fill="{TEXT}"> █</tspan></text></g>')
-    return svg(W, H, "Contact", body, seq_css("p", len(lines), 14, 1.6, .55), defs)
+    """Contact as a pull request: checks pass, a cursor clicks Merge, the PR flips to Merged. Loops."""
+    W, H, T = 1000, 430, 12
+    pct = lambda t: t / T * 100
+
+    def win(name, a, b, fade=.25):  # visible between a and b seconds
+        A, B, f = pct(a), pct(b), pct(fade)
+        lead = f"0%,{max(A-f,0):.2f}%{{opacity:0}}" if a > 0 else ""
+        return f"@keyframes {name}{{{lead}{A:.2f}%,{B:.2f}%{{opacity:1}}{min(B+f,100):.2f}%,100%{{opacity:0}}}}.{name}{{animation:{name} {T}s linear infinite}}"
+
+    done, merged, end = [2.0, 3.0, 4.0], 7.8, 11.3
+    css = win("open", 0, merged - .1) + win("mrg", merged, end) + win("pend", 0, 4.3) + win("pass", 4.4, end) + win("pre", 0, merged - .1)
+    checks = [("portfolio", "satyaranjan.vercel.app", "0.42s"), ("linkedin", "in/satyaranjan-behera", "0.38s"),
+              ("email", "satyabhr2005@gmail.com", "0.51s")]
+    rows = ""
+    for i, (name, val, t) in enumerate(checks):
+        y = 196 + i * 40
+        css += win(f"sp{i}", 0, done[i] - .05) + win(f"ok{i}", done[i], end)
+        rows += (f'<path d="M56 {y-26}H944" stroke="{BORDER}"/>'
+                 f'<g class="sp{i}" opacity="0"><circle class="spin" cx="66" cy="{y-6}" r="7" fill="none" stroke="{YELLOW}" stroke-width="2" stroke-dasharray="30 14"/></g>'
+                 f'<g class="ok{i}">{octicon("check-circle-fill", 58, y-14, 16, GREEN)}</g>'
+                 f'<text x="90" y="{y-1}" font-family="{MONO}" font-size="13" fill="{TEXT}">{name} <tspan fill="{MUTED}">/ {esc(val)}</tspan></text>'
+                 f'<text class="sp{i}" opacity="0" x="930" y="{y-1}" text-anchor="end" font-family="{MONO}" font-size="12" fill="{YELLOW}">In progress…</text>'
+                 f'<text class="ok{i}" x="930" y="{y-1}" text-anchor="end" font-family="{MONO}" font-size="12" fill="{MUTED}">Successful in {t}</text>')
+    bx, by, bw, bh = 742, 354, 188, 36
+    cx, cy = bx + bw / 2, by + bh / 2
+    css += (f"@keyframes cur{{0%,{pct(5.4):.1f}%{{opacity:0;transform:translate(150px,80px)}}{pct(5.7):.1f}%{{opacity:1;transform:translate(150px,80px)}}"
+            f"{pct(7.3):.1f}%{{opacity:1;transform:translate(0,0)}}{pct(7.5):.1f}%{{transform:translate(0,0) scale(.85)}}{pct(7.7):.1f}%{{transform:translate(0,0)}}"
+            f"{pct(9):.1f}%{{opacity:1;transform:translate(0,0)}}{pct(9.5):.1f}%,100%{{opacity:0;transform:translate(0,0)}}}}"
+            f".cur{{animation:cur {T}s cubic-bezier(.4,0,.2,1) infinite}}"
+            f"@keyframes rip{{0%,{pct(7.5):.1f}%{{opacity:0;transform:scale(.3)}}{pct(7.55):.1f}%{{opacity:.7}}{pct(8.4):.1f}%,100%{{opacity:0;transform:scale(3)}}}}"
+            f".rip{{transform-box:fill-box;transform-origin:center;animation:rip {T}s ease-out infinite}}"
+            ".spin{transform-box:fill-box;transform-origin:center;animation:spin .9s linear infinite}")
+    body = (card(W, H) +
+            # status pill: Open -> Merged
+            f'<g class="open"><rect x="40" y="34" width="86" height="30" rx="15" fill="#238636"/>{octicon("git-pull-request", 54, 41, 16, "#fff")}'
+            f'<text x="76" y="54" font-family="{DISP}" font-size="13" font-weight="800" fill="#fff">Open</text></g>'
+            f'<g class="mrg" opacity="0"><rect x="40" y="34" width="100" height="30" rx="15" fill="#8957e5"/>{octicon("git-merge", 54, 41, 16, "#fff")}'
+            f'<text x="76" y="54" font-family="{DISP}" font-size="13" font-weight="800" fill="#fff">Merged</text></g>'
+            f'<text x="158" y="58" font-family="{DISP}" font-size="26" font-weight="800" fill="{TEXT}">Let&#39;s build something together <tspan fill="{MUTED}" font-weight="400">#2026</tspan></text>'
+            f'<text x="40" y="96" font-family="{MONO}" font-size="12.5" fill="{MUTED}"><tspan fill="{TEXT}">{USER}</tspan> wants to merge 1 commit into '
+            f'<tspan fill="{BLUE}">your-team:main</tspan> from <tspan fill="{BLUE}">satya:open-to-work</tspan></text>'
+            # checks panel
+            f'<rect x="40" y="118" width="920" height="186" rx="8" fill="{PANEL}" stroke="{BORDER}"/>'
+            f'<g class="pend"><circle class="spin" cx="66" cy="146" r="8" fill="none" stroke="{YELLOW}" stroke-width="2" stroke-dasharray="34 16"/>'
+            f'<text x="90" y="151" font-family="{DISP}" font-size="15" font-weight="800" fill="{TEXT}">Some checks haven&#39;t completed yet</text></g>'
+            f'<g class="pass" opacity="0">{octicon("check-circle-fill", 57, 137, 18, GREEN)}'
+            f'<text x="90" y="151" font-family="{DISP}" font-size="15" font-weight="800" fill="{TEXT}">All checks have passed '
+            f'<tspan font-family="{MONO}" font-size="12" font-weight="400" fill="{MUTED}">· 3 successful checks</tspan></text></g>'
+            + rows +
+            # merge box
+            f'<rect x="40" y="320" width="920" height="88" rx="8" fill="{PANEL}" stroke="{BORDER}"/>'
+            f'<g class="pre"><circle cx="72" cy="364" r="16" fill="#238636"/>{octicon("check", 64, 356, 16, "#fff")}'
+            f'<text x="102" y="358" font-family="{DISP}" font-size="15" font-weight="800" fill="{TEXT}">This branch has no conflicts with the base branch</text>'
+            f'<text x="102" y="378" font-family="{MONO}" font-size="12" fill="{MUTED}">Merging can be performed automatically.</text>'
+            f'<rect x="{bx}" y="{by}" width="{bw}" height="{bh}" rx="6" fill="#238636"/>'
+            f'<text x="{cx}" y="{cy+5}" text-anchor="middle" font-family="{DISP}" font-size="14" font-weight="800" fill="#fff">Merge pull request</text></g>'
+            f'<g class="mrg" opacity="0"><circle cx="72" cy="364" r="16" fill="#8957e5"/>{octicon("git-merge", 64, 356, 16, "#fff")}'
+            f'<text x="102" y="358" font-family="{DISP}" font-size="15" font-weight="800" fill="{TEXT}">Pull request merged. Let&#39;s talk.</text>'
+            f'<text x="102" y="378" font-family="{MONO}" font-size="12" fill="{MUTED}">satyaranjan.vercel.app · in/satyaranjan-behera · satyabhr2005@gmail.com</text>'
+            f'<rect x="{bx}" y="{by}" width="{bw}" height="{bh}" rx="6" fill="#8957e5"/>'
+            f'<text x="{cx}" y="{cy+5}" text-anchor="middle" font-family="{DISP}" font-size="14" font-weight="800" fill="#fff">✓ Merged</text></g>'
+            # cursor + click ripple
+            f'<circle class="rip" cx="{cx+80}" cy="{cy}" r="14" fill="none" stroke="#fff" stroke-width="2" opacity="0"/>'
+            f'<g class="cur" opacity="0"><path transform="translate({cx+77} {cy-4})" d="M0 0L0 20L5.5 15L9 23L12.5 21.5L9 14L16 14Z" fill="#fff" stroke="{BG}" stroke-width="1.4"/></g>')
+    return svg(W, H, "Contact", body, css)
 
 
 def divider(_d):

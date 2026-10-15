@@ -49,7 +49,7 @@
 
 <img src="assets/divider.svg" width="100%" alt="" />
 
-<img src="assets/social.svg" width="100%" alt="Contact channels as a ping terminal" />
+<img src="assets/social.svg" width="100%" alt="Contact: a pull request to hire Satyaranjan, checks passing and merging" />
 
 <div align="center">
 

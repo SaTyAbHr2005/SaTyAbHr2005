@@ -22,7 +22,7 @@
 
 <img src="assets/divider.svg" width="100%" alt="" />
 
-<a href="https://github.com/SaTyAbHr2005?tab=repositories"><img src="assets/projects.svg" width="100%" alt="Radar sweep highlighting each project" /></a>
+<img src="assets/projects.svg" width="100%" alt="Radar sweep highlighting each project" />
 
 <img src="assets/cards-head.svg" width="100%" alt="Featured projects" />
 

@@ -301,7 +301,7 @@ def wordmark(_d):
            "@keyframes sh{0%,6%{opacity:0}14%,86%{opacity:1}92%,100%{opacity:0}}.sh{animation:sh 11s linear infinite}")
     defs = (f'<linearGradient id="shine" x1="0" y1="0" x2="1" y2="0" spreadMethod="reflect"><stop stop-color="{GREEN}"/><stop offset=".45" stop-color="{BLUE}"/><stop offset=".85" stop-color="{PURPLE}"/><stop offset="1" stop-color="{GREEN}"/>'
             f'<animateTransform attributeName="gradientTransform" type="translate" values="0 0;1 0" dur="6s" repeatCount="indefinite"/></linearGradient>')
-    body = (window(W, H, "satya@github: ~$ figlet --font shadow \"Satyaranjan Behera\"") +
+    body = (window(W, H, "satya@github: ~$ figlet \"Satyaranjan Behera\"") +
             f'<path class="sh" d="{"".join(shadows)}" fill="none" stroke="{MUTED}" stroke-opacity=".8" stroke-width="1.1"/>'
             f'<g fill="url(#shine)">{"".join(blocks)}</g>'
             f'<text x="{W/2}" y="{H-24}" text-anchor="middle" fill="{MUTED}" font-family="{MONO}" font-size="11" letter-spacing="4">AI/ML · SOFTWARE ENGINEER · MUMBAI<tspan class="blink" fill="{GREEN}"> █</tspan></text>')

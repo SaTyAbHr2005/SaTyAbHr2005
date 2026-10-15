@@ -24,17 +24,20 @@
 
 <a href="https://github.com/SaTyAbHr2005?tab=repositories"><img src="assets/projects.svg" width="100%" alt="Radar sweep highlighting each project" /></a>
 
-<a href="https://github.com/SaTyAbHr2005?tab=repositories"><img src="assets/cards.svg" width="100%" alt="Animated featured project cards" /></a>
+<img src="assets/cards-head.svg" width="100%" alt="Featured projects" />
 
-<p align="center"><sub>
-<a href="https://github.com/SaTyAbHr2005/AirInsight-Intelligent-Air-Quality-Analytics-Platform">AirInsight</a> ·
-<a href="https://ieeexplore.ieee.org/document/11570468">IEEE paper</a> ·
-<a href="https://github.com/SaTyAbHr2005/CrowdWatch-AI">CrowdWatch AI</a> ·
-<a href="https://github.com/SaTyAbHr2005/AutoSOC---AI-Based-Unified-Security-Monitoring-and-Vulnerability-Platform">AutoSOC</a> ·
-<a href="https://github.com/SaTyAbHr2005/FwdCheck">FwdCheck</a> (<a href="https://fwd-check.vercel.app">live</a>) ·
-<a href="https://github.com/SaTyAbHr2005/Energy-Consumption-Forecasting">EnergySense</a> (<a href="https://energysense.vercel.app/">live</a>) ·
-<a href="https://github.com/SaTyAbHr2005/AI-SDPIP-Smart-Data-Processing-with-Intelligent-Automation">AI-SDPIP</a> (<a href="https://ai-sdpip-smart-data-processing-with-intelligent-automation-kmr.streamlit.app/">live</a>)
-</sub></p>
+<table width="100%">
+<tr>
+<td width="33%" align="center" valign="top"><a href="https://github.com/SaTyAbHr2005/AirInsight-Intelligent-Air-Quality-Analytics-Platform"><img src="assets/card-1.svg" width="100%" alt="AirInsight" /></a><br /><sub><a href="https://github.com/SaTyAbHr2005/AirInsight-Intelligent-Air-Quality-Analytics-Platform">Repo ↗</a> &nbsp;·&nbsp; <a href="https://ieeexplore.ieee.org/document/11570468">📄 IEEE paper ↗</a></sub></td>
+<td width="33%" align="center" valign="top"><a href="https://github.com/SaTyAbHr2005/CrowdWatch-AI"><img src="assets/card-2.svg" width="100%" alt="CrowdWatch AI" /></a><br /><sub><a href="https://github.com/SaTyAbHr2005/CrowdWatch-AI">Repo ↗</a></sub></td>
+<td width="33%" align="center" valign="top"><a href="https://github.com/SaTyAbHr2005/AutoSOC---AI-Based-Unified-Security-Monitoring-and-Vulnerability-Platform"><img src="assets/card-3.svg" width="100%" alt="AutoSOC" /></a><br /><sub><a href="https://github.com/SaTyAbHr2005/AutoSOC---AI-Based-Unified-Security-Monitoring-and-Vulnerability-Platform">Repo ↗</a></sub></td>
+</tr>
+<tr>
+<td width="33%" align="center" valign="top"><a href="https://github.com/SaTyAbHr2005/FwdCheck"><img src="assets/card-4.svg" width="100%" alt="FwdCheck" /></a><br /><sub><a href="https://github.com/SaTyAbHr2005/FwdCheck">Repo ↗</a> &nbsp;·&nbsp; <a href="https://fwd-check.vercel.app">🟢 Live site ↗</a></sub></td>
+<td width="33%" align="center" valign="top"><a href="https://github.com/SaTyAbHr2005/Energy-Consumption-Forecasting"><img src="assets/card-5.svg" width="100%" alt="EnergySense" /></a><br /><sub><a href="https://github.com/SaTyAbHr2005/Energy-Consumption-Forecasting">Repo ↗</a> &nbsp;·&nbsp; <a href="https://energysense.vercel.app/">🟢 Live site ↗</a></sub></td>
+<td width="33%" align="center" valign="top"><a href="https://github.com/SaTyAbHr2005/AI-SDPIP-Smart-Data-Processing-with-Intelligent-Automation"><img src="assets/card-6.svg" width="100%" alt="AI-SDPIP" /></a><br /><sub><a href="https://github.com/SaTyAbHr2005/AI-SDPIP-Smart-Data-Processing-with-Intelligent-Automation">Repo ↗</a> &nbsp;·&nbsp; <a href="https://ai-sdpip-smart-data-processing-with-intelligent-automation-kmr.streamlit.app/">🟢 Live site ↗</a></sub></td>
+</tr>
+</table>
 
 <img src="assets/timeline.svg" width="100%" alt="Git-graph timeline of projects in the order they shipped" />
 
@@ -53,8 +56,7 @@
 <p>
 <a href="https://satyaranjan.vercel.app/">Portfolio</a> &nbsp;·&nbsp;
 <a href="https://www.linkedin.com/in/satyaranjan-behera-532a422a9/">LinkedIn</a> &nbsp;·&nbsp;
-<a href="mailto:satyabhr2005@gmail.com">Email</a> &nbsp;·&nbsp;
-<a href="https://leetcode.com/u/Satya252005/">LeetCode</a>
+<a href="mailto:satyabhr2005@gmail.com">Email</a>
 </p>
 
 <img src="https://komarev.com/ghpvc/?username=SaTyAbHr2005&label=profile%20views&color=3fb950&style=flat" alt="Profile views" />

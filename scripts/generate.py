@@ -20,6 +20,7 @@ TEXT, MUTED = "#e6edf3", "#7d8590"
 GREEN, BLUE, PURPLE, YELLOW = "#3fb950", "#58a6ff", "#a371f7", "#d29922"
 LEVELS = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"]
 DISP = "MonaSans,'Mona Sans','Segoe UI',Helvetica,Arial,sans-serif"
+MONO_W = 0.62  # Monaspace advance width, in em
 MONO = "Monaspace,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
 
 # ---------------------------------------------------------------- data
@@ -163,8 +164,8 @@ def seq_css(prefix, n, period, start, step, hold=0.93):
 
 
 def odometer(x, y, value, size, uid, delay=0.0, color=TEXT):
-    """Rolling-digit counter. Monospace digits are 0.6em wide, so positions are exact."""
-    s, cw, lh = f"{value:,}", size * 0.6, size * 1.15
+    """Rolling-digit counter. Monospace digits share one advance width, so positions are exact."""
+    s, cw, lh = f"{value:,}", size * MONO_W, size * 1.15
     out = f'<clipPath id="o{uid}"><rect x="{x-2}" y="{y-size}" width="{len(s)*cw+4:.0f}" height="{lh:.1f}"/></clipPath><g clip-path="url(#o{uid})" font-family="{MONO}" font-size="{size}" fill="{color}" font-weight="700">'
     for i, ch in enumerate(s):
         cx = x + i * cw
@@ -217,7 +218,7 @@ def hero(d):
     states = ["TRAINING", "BUILDING", "SHIPPING", "LEARNING"]
     state_svg = "".join(f'<text class="st{" first" if i == 0 else ""}" style="animation-delay:{i*2-8.8:.1f}s" x="{W-40}" y="46" text-anchor="end" fill="{GREEN}" font-family="{MONO}" font-size="11" letter-spacing="2">{s}</text>' for i, s in enumerate(states))
     tick = "  ◆  ".join(["PYTHON", "PYTORCH", "TENSORFLOW", "OPENCV", "SCIKIT-LEARN", "FASTAPI", "NODE.JS", "REACT", "NEXT.JS", "MONGODB", "POSTGRES", "DOCKER", "AWS"]) + "  ◆  "
-    tw = len(tick) * 12 * .6
+    tw = len(tick) * 12 * MONO_W
     chips = ""
     for i, (v, lab) in enumerate([(len(d["repos"]), "REPOSITORIES"), (d["total"], "CONTRIBUTIONS"), (d["longest"], "BEST STREAK"), (u["followers"], "FOLLOWERS")]):
         x = 40 + i * 126
@@ -399,7 +400,7 @@ def stack(d):
     for k, v in segs:
         leg += (f'<circle cx="{lx+5}" cy="{by+33}" r="5" fill="{LANG_COLORS.get(k, MUTED)}"/>'
                 f'<text x="{lx+16}" y="{by+37}" font-family="{MONO}" font-size="11.5" fill="{TEXT}">{esc(k)} <tspan fill="{MUTED}">{v/total*100:.1f}%</tspan></text>')
-        lx += 16 + (len(k) + 7) * 7 + 18
+        lx += 16 + (len(k) + 7) * 11.5 * MONO_W + 18
     css = (".ring{transform-origin:%dpx %dpx;animation:spin linear infinite}.up{transform-box:fill-box;transform-origin:center;animation:unspin linear infinite}"
            "@keyframes grow{from{transform:scaleX(0)}}.seg{transform-box:fill-box;transform-origin:left;animation:grow 1s cubic-bezier(.2,.7,.2,1) backwards}" % (cx, cy))
     defs = f'<clipPath id="barc"><rect x="{bx}" y="{by}" width="{bw}" height="8" rx="4"/></clipPath>'
@@ -458,7 +459,7 @@ def projects(_d):
 
 CARDS = [  # name, repo, description, tags, badge
     ("AirInsight", "AirInsight-Intelligent-Air-Quality-Analytics-Platform",
-     "Air-quality network with CatBoost AQI prediction. 1st in Sustainability domain at Code Automata 2.1.",
+     "CatBoost air-quality prediction network. 1st in Sustainability domain, Code Automata 2.1.",
      ["CatBoost", "real-time", "ML"], "IEEE PAPER"),
     ("CrowdWatch AI", "CrowdWatch-AI",
      "Real-time crowd monitoring, prediction and automated safety alerts for public transport.",
@@ -484,41 +485,43 @@ def rrect(x, y, w, h, r):
 
 
 def cards(d):
-    W, H, cw, ch = 1000, 600, 296, 210
+    """One SVG per card (GitHub can't link regions of a single image), plus a section header."""
+    cw, ch, m = 296, 210, 8
     by_name = {r["name"]: r for r in d["repos"]}
     accents = [GREEN, BLUE, PURPLE, GREEN, BLUE, PURPLE]
-    out = ""
-    for i, (name, repo, desc, tags, badge) in enumerate(CARDS):
-        x, y, col = 40 + (i % 3) * 312, 124 + (i // 3) * 226, accents[i]
-        r = by_name.get(repo, {})
-        lang = r.get("language") or "—"
-        dl = i * .15
-        out += (f'<g class="reveal" style="animation-delay:{dl:.2f}s">'
-                f'<path d="{rrect(x, y, cw, ch, 10)}" fill="{PANEL}" stroke="{BORDER}"/>'
-                f'<path class="beam" style="animation-delay:{-i*1.1:.1f}s" pathLength="1" d="{rrect(x, y, cw, ch, 10)}" fill="none" stroke="{col}" stroke-width="2" stroke-linecap="round"/>'
-                f'<text x="{x+20}" y="{y+32}" fill="{MUTED}" font-family="{MONO}" font-size="11">0{i+1}</text>'
-                f'<circle cx="{x+52}" cy="{y+28}" r="5" fill="{LANG_COLORS.get(lang, MUTED)}"/>'
-                f'<text x="{x+62}" y="{y+32}" fill="{MUTED}" font-family="{MONO}" font-size="11">{esc(lang)}</text>')
-        if badge:
-            bw = len(badge) * 7 + 22
-            out += (f'<rect class="glow" x="{x+cw-20-bw}" y="{y+16}" width="{bw}" height="22" rx="11" fill="{YELLOW if "IEEE" in badge else GREEN}" fill-opacity=".14" stroke="{YELLOW if "IEEE" in badge else GREEN}" stroke-opacity=".6"/>'
-                    f'<text x="{x+cw-20-bw/2}" y="{y+31}" text-anchor="middle" fill="{YELLOW if "IEEE" in badge else GREEN}" font-family="{MONO}" font-size="10" letter-spacing="1">{esc(badge)}</text>')
-        out += f'<text x="{x+20}" y="{y+70}" fill="{TEXT}" font-family="{DISP}" font-size="24" font-weight="800">{esc(name)}</text>'
-        for j, line in enumerate(textwrap.wrap(desc, 38)[:3]):
-            out += f'<text class="ln" style="animation-delay:{.5+dl+j*.15:.2f}s" x="{x+20}" y="{y+98+j*18}" fill="{MUTED}" font-family="{MONO}" font-size="11.5">{esc(line)}</text>'
-        tx = x + 20
-        for t in tags:
-            tw = len(t) * 6.6 + 18
-            out += (f'<rect x="{tx:.0f}" y="{y+ch-42}" width="{tw:.0f}" height="24" rx="12" fill="{col}" fill-opacity=".1" stroke="{col}" stroke-opacity=".45"/>'
-                    f'<text x="{tx+9:.0f}" y="{y+ch-26}" fill="{col}" font-family="{MONO}" font-size="11">{esc(t)}</text>')
-            tx += tw + 8
-        out += f'<text class="arrow" x="{x+cw-22}" y="{y+ch-24}" text-anchor="end" fill="{MUTED}" font-family="{MONO}" font-size="16">↗</text></g>'
     css = ("@keyframes beam{from{stroke-dashoffset:0}to{stroke-dashoffset:-1}}.beam{stroke-dasharray:.16 .84;animation:beam 6.6s linear infinite}"
            "@keyframes ln{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}.ln{animation:ln .6s ease-out backwards}"
            "@keyframes glow{50%{fill-opacity:.32}}.glow{animation:glow 2.4s ease-in-out infinite}"
            "@keyframes nudge{0%,80%,100%{transform:none}88%{transform:translate(3px,-3px)}}.arrow{animation:nudge 3s ease-in-out infinite}")
-    body = card(W, H) + header("FEATURED PROJECTS", "Six things worth opening", W) + out
-    return svg(W, H, "Featured projects", body, css)
+    files = {"cards-head.svg": svg(1000, 110, "Featured projects", card(1000, 110) + header("FEATURED PROJECTS · CLICK A CARD", "Six things worth opening", 1000))}
+    for i, (name, repo, desc, tags, badge) in enumerate(CARDS):
+        x, y, col = m, m, accents[i]
+        lang = by_name.get(repo, {}).get("language") or "—"
+        dl = i * .15
+        out = (f'<g class="reveal" style="animation-delay:{dl:.2f}s">'
+               f'<path d="{rrect(x, y, cw, ch, 10)}" fill="{PANEL}" stroke="{BORDER}"/>'
+               f'<path class="beam" style="animation-delay:{-i*1.1:.1f}s" pathLength="1" d="{rrect(x, y, cw, ch, 10)}" fill="none" stroke="{col}" stroke-width="2" stroke-linecap="round"/>'
+               f'<text x="{x+20}" y="{y+32}" fill="{MUTED}" font-family="{MONO}" font-size="11">0{i+1}</text>'
+               f'<circle cx="{x+52}" cy="{y+28}" r="5" fill="{LANG_COLORS.get(lang, MUTED)}"/>'
+               f'<text x="{x+62}" y="{y+32}" fill="{MUTED}" font-family="{MONO}" font-size="11">{esc(lang)}</text>')
+        if badge:
+            bc = YELLOW if "IEEE" in badge else GREEN
+            bw = len(badge) * (10 * MONO_W + 1) + 22
+            out += (f'<rect class="glow" x="{x+cw-20-bw:.0f}" y="{y+16}" width="{bw:.0f}" height="22" rx="11" fill="{bc}" fill-opacity=".14" stroke="{bc}" stroke-opacity=".6"/>'
+                    f'<text x="{x+cw-20-bw/2:.0f}" y="{y+31}" text-anchor="middle" fill="{bc}" font-family="{MONO}" font-size="10" letter-spacing="1">{esc(badge)}</text>')
+        out += f'<text x="{x+20}" y="{y+70}" fill="{TEXT}" font-family="{DISP}" font-size="24" font-weight="800">{esc(name)}</text>'
+        per_line = int((cw - 40) / (11.5 * MONO_W))
+        for j, line in enumerate(textwrap.wrap(desc, per_line)[:3]):
+            out += f'<text class="ln" style="animation-delay:{.5+dl+j*.15:.2f}s" x="{x+20}" y="{y+98+j*18}" fill="{MUTED}" font-family="{MONO}" font-size="11.5">{esc(line)}</text>'
+        tx = x + 20
+        for t in tags:
+            tw = len(t) * 11 * MONO_W + 18
+            out += (f'<rect x="{tx:.0f}" y="{y+ch-42}" width="{tw:.0f}" height="24" rx="12" fill="{col}" fill-opacity=".1" stroke="{col}" stroke-opacity=".45"/>'
+                    f'<text x="{tx+9:.0f}" y="{y+ch-26}" fill="{col}" font-family="{MONO}" font-size="11">{esc(t)}</text>')
+            tx += tw + 8
+        out += f'<text class="arrow" x="{x+cw-22}" y="{y+ch-24}" text-anchor="end" fill="{MUTED}" font-family="{MONO}" font-size="16">↗</text></g>'
+        files[f"card-{i+1}.svg"] = svg(cw + 2 * m, ch + 2 * m, name, out, css)
+    return files
 
 
 SHORT = {"Energy-Consumption-Forecasting": "EnergySense", "AirInsight-Intelligent-Air-Quality-Analytics-Platform": "AirInsight",
@@ -601,12 +604,11 @@ def snake(d):
 def social(_d):
     W, H = 1000, 360
     lines = [
-        (f'<tspan fill="{MUTED}">PING satya (</tspan><tspan fill="{GREEN}">open-to-work</tspan><tspan fill="{MUTED}">): 4 channels</tspan>'),
+        (f'<tspan fill="{MUTED}">PING satya (</tspan><tspan fill="{GREEN}">open-to-work</tspan><tspan fill="{MUTED}">): 3 channels</tspan>'),
         (f'64 bytes from <tspan fill="{BLUE}">portfolio</tspan>  satyaranjan.vercel.app       <tspan fill="{MUTED}">time=0.42 ms</tspan>'),
         (f'64 bytes from <tspan fill="{BLUE}">linkedin</tspan>   in/satyaranjan-behera        <tspan fill="{MUTED}">time=0.38 ms</tspan>'),
         (f'64 bytes from <tspan fill="{BLUE}">email</tspan>      satyabhr2005@gmail.com       <tspan fill="{MUTED}">time=0.51 ms</tspan>'),
-        (f'64 bytes from <tspan fill="{BLUE}">leetcode</tspan>   Satya252005                  <tspan fill="{MUTED}">time=0.47 ms</tspan>'),
-        (f'<tspan fill="{MUTED}">--- 4 packets transmitted, 4 received, </tspan><tspan fill="{GREEN}">0% packet loss</tspan><tspan fill="{MUTED}"> ---</tspan>'),
+        (f'<tspan fill="{MUTED}">--- 3 packets transmitted, 3 received, </tspan><tspan fill="{GREEN}">0% packet loss</tspan><tspan fill="{MUTED}"> ---</tspan>'),
         (f'<tspan fill="{GREEN}">✓ connection open.</tspan> Have an idea worth building? Let\'s talk.'),
     ]
     rows = "".join(f'<g class="p{i}"><text x="40" y="{104+i*28}" xml:space="preserve" fill="{TEXT}" font-size="14">{l}</text></g>' for i, l in enumerate(lines))
@@ -636,9 +638,11 @@ def main():
         if f.endswith(".svg"):
             os.remove(os.path.join(OUT, f))
     for fn in (hero, wordmark, terminal, stack, projects, cards, timeline, stats, snake, social, divider):
-        with open(os.path.join(OUT, fn.__name__ + ".svg"), "w", encoding="utf-8") as fh:
-            fh.write(fn(d))
-        print("wrote", fn.__name__ + ".svg")
+        res = fn(d)
+        for name, content in (res if isinstance(res, dict) else {fn.__name__ + ".svg": res}).items():
+            with open(os.path.join(OUT, name), "w", encoding="utf-8") as fh:
+                fh.write(content)
+            print("wrote", name)
 
 
 if __name__ == "__main__":

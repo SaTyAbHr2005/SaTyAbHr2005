@@ -309,35 +309,40 @@ def wordmark(_d):
 
 
 def terminal(d):
-    W, H = 1000, 460
-    im = ImageEnhance.Color(ImageEnhance.Contrast(d["avatar"]).enhance(1.3)).enhance(1.5).resize((40, 40), Image.LANCZOS)
-    ramp, art = " .:-=+*#%@", ""
-    for y in range(40):
-        for x in range(40):
-            L = lum(im.getpixel((x, y)))
-            if L >= .14:
-                art += f'<text x="{x*6.6:.1f}" y="{y*6.6:.1f}" fill="{true_color(im.getpixel((x, y)))}">{esc(ramp[min(9, int(L*10))])}</text>'
-    top = sorted(d["langs"].items(), key=lambda kv: -kv[1])[:4]
-    info = [("", "satyaranjan@github", BLUE), ("", "─" * 32, BORDER),
-            ("role", "AI/ML · Software Engineer", TEXT), ("edu", "B.E. Computer Engg · VCET · 2027", TEXT),
-            ("cgpa", "8.44", TEXT), ("location", (d["user"].get("location") or "Mumbai") + ", India", TEXT),
-            ("languages", " · ".join(k for k, _ in top), TEXT), ("ml", "PyTorch · TensorFlow · scikit-learn · OpenCV", TEXT),
-            ("backend", "FastAPI · Node · Express · MongoDB · Postgres", TEXT),
-            ("uptime", f"{d['total']:,} contributions in the last year", TEXT), ("status", "● open to work", GREEN)]
-    n = len(info)
-    css = seq_css("l", n + 1, 16, 1.4, .3)
-    rows = ""
-    for i, (k, v, col) in enumerate(info):
-        key = f'<tspan fill="{BLUE}">{esc(k)}</tspan><tspan fill="{MUTED}">: </tspan>' if k else ""
-        rows += f'<g class="l{i}"><text x="380" y="{104+i*25}" font-size="14" fill="{col}">{key}<tspan fill="{col}">{esc(v)}</tspan></text></g>'
-    sw = [BG, "#ff7b72", GREEN, YELLOW, BLUE, PURPLE, "#39c5cf", TEXT]
-    rows += f'<g class="l{n}">' + "".join(f'<rect x="{380+i*30}" y="{98+n*25}" width="26" height="14" fill="{c}" stroke="{BORDER}"/>' for i, c in enumerate(sw)) + "</g>"
-    defs = (f'<clipPath id="cmd"><rect x="58" y="56" height="20" width="0"><animate attributeName="width" values="0;0;150;150" keyTimes="0;.02;.08;1" dur="16s" repeatCount="indefinite"/></rect></clipPath>')
-    body = (window(W, H, "satya@github: ~") + f'<g font-family="{MONO}">'
-            f'<text x="40" y="70" font-size="14" fill="{GREEN}">➜</text><text x="60" y="70" font-size="14" fill="{TEXT}" clip-path="url(#cmd)">neofetch --live</text>'
-            f'<g transform="translate(48 100)" font-size="8.4" class="reveal" style="animation-delay:.5s">{art}</g>{rows}'
-            f'<text x="40" y="{H-26}" font-size="14"><tspan fill="{GREEN}">➜</tspan><tspan class="blink" fill="{TEXT}"> █</tspan></text></g>')
-    return svg(W, H, "neofetch", body, css, defs)
+    """A 'training run' on me: animated epochs instead of a list that repeats the stack section."""
+    W, H = 1000, 384
+    live = sum(1 for c in CARDS if "LIVE" in c[4])
+    epochs = [("0.842", "idea → prototype"), ("0.417", "prototype → product"),
+              ("0.163", "break → rebuild"), ("0.041", "ship → learn → repeat")]
+    T, start, step = 16, 1.6, .75
+    lines = [
+        f'<tspan fill="{MUTED}">loading dataset · </tspan>{len(d["repos"])} repos<tspan fill="{MUTED}"> · </tspan>{d["total"]:,} contributions<tspan fill="{MUTED}"> · </tspan>{live} live deployments',
+        f'<tspan fill="{MUTED}">config · optimizer: </tspan><tspan fill="{PURPLE}">build-break-rebuild</tspan><tspan fill="{MUTED}"> · fuel: </tspan><tspan fill="{PURPLE}">curiosity</tspan>',
+    ]
+    bx, bw = 190, 230
+    rows, css = "", seq_css("l", 2 + len(epochs) + 2, T, start, step)
+    for i, l in enumerate(lines):
+        rows += f'<g class="l{i}"><text x="40" y="{108+i*30}" font-size="14" fill="{TEXT}">{l}</text></g>'
+    for k, (loss, note) in enumerate(epochs):
+        i, y = 2 + k, 108 + (2 + k) * 30
+        a = (start + i * step) / T * 100
+        css += (f"@keyframes f{k}{{0%,{a:.2f}%{{transform:scaleX(0)}}{a+4.5:.2f}%,100%{{transform:scaleX(1)}}}}"
+                f".f{k}{{transform-box:fill-box;transform-origin:left;animation:f{k} {T}s cubic-bezier(.4,0,.2,1) infinite}}")
+        rows += (f'<g class="l{i}"><text x="40" y="{y}" font-size="14" fill="{TEXT}">Epoch {k+1}/{len(epochs)}</text>'
+                 f'<rect x="{bx}" y="{y-11}" width="{bw}" height="12" rx="3" fill="{PANEL}" stroke="{BORDER}"/>'
+                 f'<rect class="f{k}" x="{bx}" y="{y-11}" width="{bw}" height="12" rx="3" fill="url(#ink)"/>'
+                 f'<text x="{bx+bw+14}" y="{y}" font-size="14" fill="{TEXT}">100% <tspan fill="{MUTED}">loss</tspan> {loss}</text>'
+                 f'<text x="{bx+bw+190}" y="{y}" font-size="14" fill="{BLUE}">· {esc(note)}</text></g>')
+    n = 2 + len(epochs)
+    rows += (f'<g class="l{n}"><text x="40" y="{108+n*30}" font-size="14"><tspan fill="{GREEN}">✓ converged</tspan>'
+             f'<tspan fill="{MUTED}"> · checkpoint saved → </tspan><tspan fill="{TEXT}">satyaranjan.vercel.app</tspan></text></g>'
+             f'<g class="l{n+1}"><text x="40" y="{108+(n+1)*30}" font-size="14"><tspan fill="{MUTED}">status: </tspan>'
+             f'<tspan fill="{GREEN}">● open to work</tspan><tspan fill="{MUTED}"> · {esc((d["user"].get("location") or "Mumbai") + ", India")}</tspan></text></g>')
+    defs = (f'<clipPath id="cmd"><rect x="58" y="56" height="20" width="0"><animate attributeName="width" values="0;0;560;560" keyTimes="0;.02;.09;1" dur="{T}s" repeatCount="indefinite"/></rect></clipPath>')
+    body = (window(W, H, "satya@github: ~/career") + f'<g font-family="{MONO}">'
+            f'<text x="40" y="70" font-size="14" fill="{GREEN}">➜</text><text x="60" y="70" font-size="14" fill="{TEXT}" clip-path="url(#cmd)">python train.py --model satyaranjan --epochs {len(epochs)}</text>'
+            f'{rows}<text x="40" y="{H-26}" font-size="14"><tspan fill="{GREEN}">➜</tspan><tspan class="blink" fill="{TEXT}"> █</tspan></text></g>')
+    return svg(W, H, "Training run", body, css, defs)
 
 
 LANG_COLORS = {"Python": "#3572A5", "JavaScript": "#f1e05a", "TypeScript": "#3178c6", "C++": "#f34b7d", "HTML": "#e34c26",

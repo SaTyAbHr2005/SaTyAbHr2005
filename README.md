@@ -14,7 +14,7 @@
 
 <img src="assets/divider.svg" width="100%" alt="" />
 
-<img src="assets/terminal.svg" width="100%" alt="Animated neofetch-style terminal summary" />
+<img src="assets/terminal.svg" width="100%" alt="Animated terminal: a training run on Satyaranjan" />
 
 <img src="assets/divider.svg" width="100%" alt="" />
 

@@ -7,7 +7,6 @@
 <p>
 <a href="https://satyaranjan.vercel.app/">Portfolio</a> &nbsp;·&nbsp;
 <a href="https://www.linkedin.com/in/satyaranjan-behera-532a422a9/">LinkedIn</a> &nbsp;·&nbsp;
-<a href="https://satyaranjan.vercel.app/Satya_Resume.pdf">Resume</a> &nbsp;·&nbsp;
 <a href="mailto:satyabhr2005@gmail.com">Email</a>
 </p>
 
@@ -55,8 +54,7 @@
 <a href="https://satyaranjan.vercel.app/">Portfolio</a> &nbsp;·&nbsp;
 <a href="https://www.linkedin.com/in/satyaranjan-behera-532a422a9/">LinkedIn</a> &nbsp;·&nbsp;
 <a href="mailto:satyabhr2005@gmail.com">Email</a> &nbsp;·&nbsp;
-<a href="https://leetcode.com/u/Satya252005/">LeetCode</a> &nbsp;·&nbsp;
-<a href="https://satyaranjan.vercel.app/Satya_Resume.pdf">Resume</a>
+<a href="https://leetcode.com/u/Satya252005/">LeetCode</a>
 </p>
 
 <img src="https://komarev.com/ghpvc/?username=SaTyAbHr2005&label=profile%20views&color=3fb950&style=flat" alt="Profile views" />

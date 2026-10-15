@@ -427,7 +427,7 @@ PROJECTS = [  # name, tag, angle (deg, clockwise from east), radius fraction
 
 
 def projects(_d):
-    W, H, cx, cy, R, T = 1000, 600, 280, 340, 210, 9
+    W, H, cx, cy, R, T = 1000, 616, 280, 340, 210, 9
     rings = "".join(f'<circle cx="{cx}" cy="{cy}" r="{R*f:.0f}" fill="none" stroke="{GREEN}" stroke-opacity="{.12 if f < 1 else .35}"/>' for f in (.25, .5, .75, 1))
     rings += f'<path d="M{cx-R} {cy}H{cx+R}M{cx} {cy-R}V{cy+R}" stroke="{GREEN}" stroke-opacity=".12"/>'
     rings += "".join(f'<path d="M{cx+R*math.cos(math.radians(a)):.1f} {cy+R*math.sin(math.radians(a)):.1f}L{cx+(R-8)*math.cos(math.radians(a)):.1f} {cy+(R-8)*math.sin(math.radians(a)):.1f}" stroke="{GREEN}" stroke-opacity=".4"/>' for a in range(0, 360, 10))
@@ -457,7 +457,7 @@ def projects(_d):
            f"@keyframes nm{{0%{{fill:{GREEN}}}30%,100%{{fill:{TEXT}}}}}.nm{{animation:nm {T}s ease-out infinite}}")
     body = (card(W, H) + header("PROJECT RADAR · SCANNING", "Things I've built", W) + rings
             + f'<g class="sweep">{wedge}</g>{blips}'
-            + f'<circle cx="{cx}" cy="{cy}" r="5" fill="{GREEN}"/><text x="{cx-R}" y="{cy+R+30}" fill="{MUTED}" font-family="{MONO}" font-size="10" letter-spacing="1.5">RANGE · AI · CV · SECURITY · DATA</text>'
+            + f'<circle cx="{cx}" cy="{cy}" r="5" fill="{GREEN}"/><text x="{cx}" y="{cy+R+32}" text-anchor="middle" fill="{MUTED}" font-family="{MONO}" font-size="10" letter-spacing="1.5">RANGE · AI · CV · SECURITY · DATA</text>'
             + rows)
     return svg(W, H, "Projects", body, css)
 

@@ -422,7 +422,7 @@ PROJECTS = [  # name, tag, angle (deg, clockwise from east), radius fraction
     ("SENTRIX", "data-exposure threat intel", 185, .78),
     ("EnergySense", "energy forecasting · big data", 235, .5),
     ("AutoStylist", "AI wardrobe & outfit agent", 290, .85),
-    ("EnviroPulse", "district-level environment analytics", 335, .68),
+    ("Unmask", "crypto-hack OSINT · on-chain forensics", 335, .68),
 ]
 
 

@@ -469,9 +469,9 @@ CARDS = [  # name, repo, description, tags, badge
     ("CrowdWatch AI", "CrowdWatch-AI",
      "Real-time crowd monitoring, prediction and automated safety alerts for public transport.",
      ["computer vision", "WebSocket"], ""),
-    ("AutoSOC", "AutoSOC---AI-Based-Unified-Security-Monitoring-and-Vulnerability-Platform",
-     "Vulnerability scanning, attack-path graphs and probabilistic risk analysis in one platform.",
-     ["security", "graphs", "risk"], ""),
+    ("Unmask", "Unmask",
+     "Traces crypto hacks by fusing OSINT chatter with on-chain wallet trails to name the hacker.",
+     ["OSINT", "blockchain", "forensics"], "● LIVE"),
     ("FwdCheck", "FwdCheck",
      "Fact-checks WhatsApp forwards claim by claim against trusted sources, in Hindi, Marathi or English.",
      ["FastAPI", "Gemini", "Next.js"], "● LIVE"),
@@ -539,7 +539,7 @@ SHORT = {"Energy-Consumption-Forecasting": "EnergySense", "AirInsight-Intelligen
          "AutoSOC---AI-Based-Unified-Security-Monitoring-and-Vulnerability-Platform": "AutoSOC",
          "SENTRIX-Sensitive-Exposure-Threat-Intelligence-System": "SENTRIX",
          "AI-SDPIP-Smart-Data-Processing-with-Intelligent-Automation": "AI-SDPIP"}
-TIMELINE = set(SHORT) | {"EnviroPulse", "Portfolio", "FwdCheck"}  # finished work only; add new repos here
+TIMELINE = set(SHORT) | {"EnviroPulse", "Portfolio", "FwdCheck", "Unmask"}  # finished work only; add new repos here
 
 
 def timeline(d):

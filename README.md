@@ -45,7 +45,7 @@
 
 <img src="assets/stats.svg" width="100%" alt="Live GitHub stats as rolling counters" />
 
-<img src="assets/snake.svg" width="100%" alt="Contribution snake" />
+<img src="assets/city.svg" width="100%" alt="Contribution city: one 3D building per day, height by contributions" />
 
 <img src="assets/divider.svg" width="100%" alt="" />
 

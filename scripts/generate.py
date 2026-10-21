@@ -1,6 +1,6 @@
 """Generate the animated SVG sections for the profile README.
 
-Pulls live data (profile, repos, languages, contribution calendar, avatar, snake)
+Pulls live data (profile, repos, languages, contribution calendar, avatar)
 and writes self-contained, CSS/SMIL-animated SVGs into ../assets.
 Run locally or from .github/workflows/profile.yml. Needs Pillow and fonttools.
 """
@@ -72,8 +72,7 @@ def load():
     days = contributions()
     cur, longest = streaks(days)
     avatar = Image.open(io.BytesIO(get(user["avatar_url"] + "&s=460", raw=True))).convert("RGB")
-    snake = get(f"https://raw.githubusercontent.com/{USER}/{USER}/output/github-contribution-grid-snake.svg", raw=True).decode()
-    return {"user": user, "repos": repos, "langs": langs, "avatar": avatar, "snake": snake,
+    return {"user": user, "repos": repos, "langs": langs, "avatar": avatar, "days": days,
             "stars": sum(r["stargazers_count"] for r in repos), "total": sum(d["count"] for d in days),
             "streak": cur, "longest": longest, "active": sum(1 for d in days if d["count"])}
 
@@ -593,22 +592,80 @@ def stats(d):
     return svg(W, H, "Stats", body, odometer_css(40))
 
 
-def snake(d):
-    W, H = 1000, 360
-    src = d["snake"]
-    vb = re.search(r'viewBox="([^"]+)"', src).group(1)
-    vx, vy, vw, vh = map(float, vb.split())
-    inner = src[src.index(">", src.index("<svg")) + 1: src.rindex("</svg>")]
-    inner = re.sub(r":root\{[^}]*\}", ":root{--cb:#0d111700;--cs:%s;--ce:%s;--c0:%s;--c1:%s;--c2:%s;--c3:%s;--c4:%s}" % (PURPLE, LEVELS[0], *LEVELS), inner)
-    inner = re.sub(r"@media\s*\(prefers-color-scheme:\s*dark\)\s*\{:root\{[^}]*\}\}", "", inner)
-    sw = W - 80
-    sh = sw * vh / vw
-    legend = "".join(f'<rect x="{W-196+i*16}" y="{H-36}" width="12" height="12" rx="2.5" fill="{c}"/>' for i, c in enumerate(LEVELS))
-    body = (card(W, H) + header("CONTRIBUTION TRAIL", f"{d['total']:,} contributions, eaten one by one", W)
-            + f'<svg x="40" y="{108}" width="{sw}" height="{sh:.0f}" viewBox="{vb}">{inner}</svg>'
-            + f'<text x="40" y="{H-26}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">{d["active"]} active days · longest streak {d["longest"]} · current {d["streak"]}</text>'
-            + f'<text x="{W-232}" y="{H-26}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">less</text>{legend}<text x="{W-110}" y="{H-26}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">more</text>')
-    return svg(W, H, "Contribution snake", body)
+def shade(hexc, k):
+    return "#" + "".join(f"{int(int(hexc[i:i+2], 16) * k):02x}" for i in (1, 3, 5))
+
+
+def city(d):
+    """Isometric skyline: one building per day, height = contributions. Rises in a wave, then rebuilds."""
+    W, H, T = 1000, 460, 12
+    days = [x for x in d["days"] if x["date"] <= date.today().isoformat()]
+    first = date.fromisoformat(days[0]["date"])
+    first = date.fromordinal(first.toordinal() - (first.weekday() + 1) % 7)  # back to Sunday
+    top = max(x["count"] for x in days) or 1
+    nz = sorted(x["count"] for x in days if x["count"])
+    cuts = [nz[len(nz) * q // 4] for q in (1, 2, 3)] if nz else [1, 1, 1]
+    a, b, c, e, x0, y0, g = 10.4, 1.9, 9, 7, 300, 372, .12  # week axis (a,-b), day axis (c,e)
+    P = lambda u, v, h=0: f"{x0+u*a+v*c:.1f} {y0-u*b+v*e-h:.1f}"
+
+    def faces(u0, u1, v0, v1, h):
+        return (f"M{P(u0,v0,h)}L{P(u1,v0,h)}L{P(u1,v1,h)}L{P(u0,v1,h)}Z",
+                f"M{P(u0,v0)}L{P(u0,v1)}L{P(u0,v1,h)}L{P(u0,v0,h)}Z",
+                f"M{P(u0,v1)}L{P(u1,v1)}L{P(u1,v1,h)}L{P(u0,v1,h)}Z")
+
+    cells = []
+    for x in days:
+        dt = date.fromisoformat(x["date"])
+        cells.append(((dt - first).days // 7, (dt.weekday() + 1) % 7, x))
+    weeks = max(w for w, _, _ in cells) + 1
+    body_c = (f'<path d="M{P(-.4,-.4)}L{P(weeks+.4,-.4)}L{P(weeks+.4,7.4)}L{P(-.4,7.4)}Z" fill="{PANEL}" stroke="{BORDER}"/>')
+    busiest = max(cells, key=lambda t: t[2]["count"])
+    for w, r, x in sorted(cells, key=lambda t: (-t[0], t[1])):  # back to front
+        n = x["count"]
+        lvl = 0 if not n else 1 + sum(n > k for k in cuts)
+        col = "#21262d" if not n else LEVELS[lvl]
+        h = 2 if not n else 8 + 142 * math.sqrt(n / top)
+        u0, u1, v0, v1 = w + g, w + 1 - g, r + g, r + 1 - g
+        full, flat = faces(u0, u1, v0, v1, h), faces(u0, u1, v0, v1, 0)
+        cols = (col, shade(col, .55), shade(col, .75))
+        if not n:
+            body_c += "".join(f'<path d="{p}" fill="{k}"/>' for p, k in zip(full, cols))
+            continue
+        beg = f"{.4 + w * .06 - T:.2f}s"
+        body_c += "".join(
+            f'<path d="{p}" fill="{k}"><animate attributeName="d" dur="{T}s" begin="{beg}" repeatCount="indefinite"'
+            f' values="{f};{p};{p};{f};{f}" keyTimes="0;.12;.82;.92;1" calcMode="spline"'
+            f' keySplines=".2 .7 .2 1;0 0 1 1;.5 0 .8 .3;0 0 1 1"/></path>'
+            for p, f, k in zip(full, flat, cols))
+    # pin over the busiest day
+    w, r, x = busiest
+    bx, by = (float(s) for s in P(w + .5, r + .5, 8 + 142 * math.sqrt(x["count"] / top)).split())
+    when = date.fromisoformat(x["date"])
+    body_c += (f'<path d="M{bx} {by-4}V{by-26}" stroke="{TEXT}" stroke-opacity=".6"/>'
+               f'<circle class="pulse" cx="{bx}" cy="{by-28}" r="3.5" fill="{YELLOW}"/>'
+               f'<text x="{bx}" y="{by-38}" text-anchor="middle" fill="{TEXT}" font-family="{MONO}" font-size="10.5">peak · {x["count"]} on {when:%b %d}</text>')
+    # facts the stats tiles don't already show
+    names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    by_wd, by_m = [[] for _ in range(7)], {}
+    for _, r, x in cells:
+        by_wd[r].append(x["count"])
+        k = x["date"][:7]
+        by_m[k] = by_m.get(k, 0) + x["count"]
+    wd = max(range(7), key=lambda i: sum(by_wd[i]) / max(1, len(by_wd[i])))
+    bm = max(by_m, key=by_m.get)
+    facts = [(str(busiest[2]["count"]), f"busiest day · {when:%b %d}", YELLOW),
+             (names[wd], f"strongest weekday · avg {sum(by_wd[wd]) / len(by_wd[wd]):.1f}", BLUE),
+             (datetime.strptime(bm, "%Y-%m").strftime("%b"), f"best month · {by_m[bm]:,} contributions", PURPLE)]
+    side = "".join(f'<g class="reveal" style="animation-delay:{i*.15:.2f}s"><rect x="40" y="{132+i*86}" width="3" height="58" rx="1.5" fill="{k}"/>'
+                   f'<text x="58" y="{164+i*86}" fill="{TEXT}" font-family="{DISP}" font-size="30" font-weight="800">{esc(v)}</text>'
+                   f'<text x="58" y="{186+i*86}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">{esc(lab)}</text></g>'
+                   for i, (v, lab, k) in enumerate(facts))
+    legend = "".join(f'<rect x="{82+i*16}" y="{H-50}" width="12" height="12" rx="2.5" fill="{"#21262d" if not i else k}"/>' for i, k in enumerate(LEVELS))
+    side += (f'<text x="40" y="{H-40}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">less</text>{legend}'
+             f'<text x="166" y="{H-40}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">more</text>'
+             f'<text x="40" y="{H-20}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">1 building = 1 day · height = activity</text>')
+    body = card(W, H) + header("CONTRIBUTION CITY · 3D", "The skyline I built this year", W) + side + body_c
+    return svg(W, H, "Contribution city", body)
 
 
 def octicon(name, x, y, size, color):
@@ -703,7 +760,7 @@ def main():
     for f in os.listdir(OUT):  # drop sections that no longer exist
         if f.endswith(".svg"):
             os.remove(os.path.join(OUT, f))
-    for fn in (hero, wordmark, terminal, stack, projects, cards, timeline, stats, snake, social, divider):
+    for fn in (hero, wordmark, terminal, stack, projects, cards, timeline, stats, city, social, divider):
         res = fn(d)
         for name, content in (res if isinstance(res, dict) else {fn.__name__ + ".svg": res}).items():
             with open(os.path.join(OUT, name), "w", encoding="utf-8") as fh:

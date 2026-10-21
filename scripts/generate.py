@@ -597,7 +597,7 @@ def shade(hexc, k):
 
 
 def city(d):
-    """Isometric skyline, one building per day. Rises once, then a cursor 'hovers' a tour of days, lifting each one."""
+    """Isometric skyline, one building per day. Rises once, then tours top and recent days, lifting each with its count."""
     W, H = 1000, 460
     days = [x for x in d["days"] if x["date"] <= date.today().isoformat()]
     first = date.fromisoformat(days[0]["date"])
@@ -643,13 +643,12 @@ def city(d):
     S, LIFT, START = 2.4, 22, 3.4
     TT = S * len(stops)
     pct = lambda t: t / TT * 100
-    css, overlay, path = ".hv{opacity:0}", "", []
+    css, overlay = ".hv{opacity:0}", ""
     for i, (w, r, x) in enumerate(stops):
         n, h = x["count"], height(x["count"])
         col = shade(color(n), 1.25)
         bx, by = (float(s) for s in P(w + .5, r + .5).split())
         ty = by - h - LIFT
-        path.append((bx + 3, ty + 4))
         when = date.fromisoformat(x["date"])
         l1 = f"{n} contribution" + ("s" if n != 1 else "")
         l2 = f"{when:%a, %b %d}"
@@ -667,13 +666,6 @@ def city(d):
                     + f'<g transform="translate({tx:.1f} {tyb:.1f})"><rect width="{tw:.0f}" height="46" rx="8" fill="{PANEL}" stroke="{BORDER}"/>'
                     f'<text x="13" y="20" fill="{TEXT}" font-family="{DISP}" font-size="14" font-weight="800">{l1}</text>'
                     f'<text x="13" y="36" fill="{MUTED}" font-family="{MONO}" font-size="10.5">{l2}</text></g></g>')
-    kf = "".join(f"{pct(i*S):.2f}%{{transform:translate({path[i-1][0]:.1f}px,{path[i-1][1]:.1f}px)}}"
-                 f"{pct(i*S+.45):.2f}%,{pct((i+1)*S)-.05:.2f}%{{transform:translate({path[i][0]:.1f}px,{path[i][1]:.1f}px)}}"
-                 for i in range(len(path)))
-    end = f"translate({path[-1][0]:.1f}px,{path[-1][1]:.1f}px)"
-    css += (f"@keyframes cur{{{kf}100%{{transform:{end}}}}}"
-            f".cur{{transform:{end};animation:cur {TT:.1f}s cubic-bezier(.4,0,.2,1) {START}s infinite}}")
-    cursor = f'<g class="cur"><path d="M0 0L0 20L5.5 15L9 23L12.5 21.5L9 14L16 14Z" fill="#fff" stroke="{BG}" stroke-width="1.4"/></g>'
 
     # facts the stats tiles don't already show
     busiest = max(cells, key=lambda t: t[2]["count"])
@@ -697,7 +689,7 @@ def city(d):
              f'<text x="166" y="{H-40}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">more</text>'
              f'<text x="40" y="{H-20}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">1 building = 1 day · height = activity</text>')
     body = (card(W, H) + header("CONTRIBUTION CITY · 3D", "The skyline I built this year", W, "click to explore in 3D ↗")
-            + side + city_svg + overlay + cursor)
+            + side + city_svg + overlay)
     return svg(W, H, "Contribution city", body, css)
 
 

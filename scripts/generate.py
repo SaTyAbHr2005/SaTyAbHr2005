@@ -593,12 +593,12 @@ def stats(d):
 
 
 def shade(hexc, k):
-    return "#" + "".join(f"{int(int(hexc[i:i+2], 16) * k):02x}" for i in (1, 3, 5))
+    return "#" + "".join(f"{min(255, int(int(hexc[i:i+2], 16) * k)):02x}" for i in (1, 3, 5))
 
 
 def city(d):
-    """Isometric skyline: one building per day, height = contributions. Rises in a wave, then rebuilds."""
-    W, H, T = 1000, 460, 12
+    """Isometric skyline, one building per day. Rises once, then a cursor 'hovers' a tour of days, lifting each one."""
+    W, H = 1000, 460
     days = [x for x in d["days"] if x["date"] <= date.today().isoformat()]
     first = date.fromisoformat(days[0]["date"])
     first = date.fromordinal(first.toordinal() - (first.weekday() + 1) % 7)  # back to Sunday
@@ -607,8 +607,11 @@ def city(d):
     cuts = [nz[len(nz) * q // 4] for q in (1, 2, 3)] if nz else [1, 1, 1]
     a, b, c, e, x0, y0, g = 10.4, 1.9, 9, 7, 300, 372, .12  # week axis (a,-b), day axis (c,e)
     P = lambda u, v, h=0: f"{x0+u*a+v*c:.1f} {y0-u*b+v*e-h:.1f}"
+    height = lambda n: 2 if not n else 8 + 142 * math.sqrt(n / top)
+    color = lambda n: "#21262d" if not n else LEVELS[1 + sum(n > k for k in cuts)]
 
-    def faces(u0, u1, v0, v1, h):
+    def faces(w, r, h):
+        u0, u1, v0, v1 = w + g, w + 1 - g, r + g, r + 1 - g
         return (f"M{P(u0,v0,h)}L{P(u1,v0,h)}L{P(u1,v1,h)}L{P(u0,v1,h)}Z",
                 f"M{P(u0,v0)}L{P(u0,v1)}L{P(u0,v1,h)}L{P(u0,v0,h)}Z",
                 f"M{P(u0,v1)}L{P(u1,v1)}L{P(u1,v1,h)}L{P(u0,v1,h)}Z")
@@ -618,39 +621,68 @@ def city(d):
         dt = date.fromisoformat(x["date"])
         cells.append(((dt - first).days // 7, (dt.weekday() + 1) % 7, x))
     weeks = max(w for w, _, _ in cells) + 1
-    body_c = (f'<path d="M{P(-.4,-.4)}L{P(weeks+.4,-.4)}L{P(weeks+.4,7.4)}L{P(-.4,7.4)}Z" fill="{PANEL}" stroke="{BORDER}"/>')
-    busiest = max(cells, key=lambda t: t[2]["count"])
+    city_svg = f'<path d="M{P(-.4,-.4)}L{P(weeks+.4,-.4)}L{P(weeks+.4,7.4)}L{P(-.4,7.4)}Z" fill="{PANEL}" stroke="{BORDER}"/>'
     for w, r, x in sorted(cells, key=lambda t: (-t[0], t[1])):  # back to front
-        n = x["count"]
-        lvl = 0 if not n else 1 + sum(n > k for k in cuts)
-        col = "#21262d" if not n else LEVELS[lvl]
-        h = 2 if not n else 8 + 142 * math.sqrt(n / top)
-        u0, u1, v0, v1 = w + g, w + 1 - g, r + g, r + 1 - g
-        full, flat = faces(u0, u1, v0, v1, h), faces(u0, u1, v0, v1, 0)
+        n, col = x["count"], color(x["count"])
         cols = (col, shade(col, .55), shade(col, .75))
         if not n:
-            body_c += "".join(f'<path d="{p}" fill="{k}"/>' for p, k in zip(full, cols))
+            city_svg += "".join(f'<path d="{p}" fill="{k}"/>' for p, k in zip(faces(w, r, 2), cols))
             continue
-        beg = f"{.4 + w * .06 - T:.2f}s"
-        body_c += "".join(
-            f'<path d="{p}" fill="{k}"><animate attributeName="d" dur="{T}s" begin="{beg}" repeatCount="indefinite"'
-            f' values="{f};{p};{p};{f};{f}" keyTimes="0;.12;.82;.92;1" calcMode="spline"'
-            f' keySplines=".2 .7 .2 1;0 0 1 1;.5 0 .8 .3;0 0 1 1"/></path>'
-            for p, f, k in zip(full, flat, cols))
-    # pin over the busiest day
-    w, r, x = busiest
-    bx, by = (float(s) for s in P(w + .5, r + .5, 8 + 142 * math.sqrt(x["count"] / top)).split())
-    when = date.fromisoformat(x["date"])
-    body_c += (f'<path d="M{bx} {by-4}V{by-26}" stroke="{TEXT}" stroke-opacity=".6"/>'
-               f'<circle class="pulse" cx="{bx}" cy="{by-28}" r="3.5" fill="{YELLOW}"/>'
-               f'<text x="{bx}" y="{by-38}" text-anchor="middle" fill="{TEXT}" font-family="{MONO}" font-size="10.5">peak · {x["count"]} on {when:%b %d}</text>')
+        wait = .3 + w * .04  # one rise, left to right; the static frame (no SMIL) is the finished city
+        dur = wait + .9
+        city_svg += "".join(
+            f'<path d="{p}" fill="{k}"><animate attributeName="d" dur="{dur:.2f}s" fill="freeze" values="{f};{f};{p}"'
+            f' keyTimes="0;{wait/dur:.3f};1" calcMode="spline" keySplines="0 0 1 1;.2 .7 .2 1"/></path>'
+            for p, f, k in zip(faces(w, r, height(n)), faces(w, r, 0), cols))
+
+    # the hover tour: top days plus the latest active ones, visited left to right
+    active = [t for t in cells if t[2]["count"]]
+    stops = sorted(active, key=lambda t: -t[2]["count"])[:4]
+    stops += [t for t in reversed(active) if t not in stops][:2]
+    stops.sort(key=lambda t: (t[0], t[1]))
+    S, LIFT, START = 2.4, 22, 3.4
+    TT = S * len(stops)
+    pct = lambda t: t / TT * 100
+    css, overlay, path = ".hv{opacity:0}", "", []
+    for i, (w, r, x) in enumerate(stops):
+        n, h = x["count"], height(x["count"])
+        col = shade(color(n), 1.25)
+        bx, by = (float(s) for s in P(w + .5, r + .5).split())
+        ty = by - h - LIFT
+        path.append((bx + 3, ty + 4))
+        when = date.fromisoformat(x["date"])
+        l1 = f"{n} contribution" + ("s" if n != 1 else "")
+        l2 = f"{when:%a, %b %d}"
+        tw = max(len(l1) * 8.6, len(l2) * 6.6) + 26
+        tx = bx - tw - 16 if bx - tw - 16 > 280 else bx + 16  # beside the lifted top, clear of the header
+        tyb = max(ty - 23, 104)
+        A, B = pct(i * S + .45), pct((i + 1) * S - .15)
+        sy = h / (h + LIFT)
+        css += (f"@keyframes hv{i}{{0%,{A-.1:.2f}%{{opacity:0;transform:scaleY({sy:.3f})}}{A:.2f}%{{opacity:1;transform:scaleY({sy:.3f})}}"
+                f"{A+pct(.35):.2f}%,{B:.2f}%{{opacity:1;transform:none}}{B+pct(.12):.2f}%,100%{{opacity:0;transform:none}}}}"
+                f".hv{i}{{transform-origin:{bx:.1f}px {by:.1f}px;animation:hv{i} {TT:.1f}s linear {START}s infinite}}")
+        overlay += (f'<g class="hv hv{i}"><ellipse cx="{bx:.1f}" cy="{by:.1f}" rx="16" ry="7" fill="{GREEN}" fill-opacity=".25"/>'
+                    + "".join(f'<path d="{p}" fill="{k}" stroke="#fff" stroke-opacity=".35" stroke-width=".6"/>'
+                              for p, k in zip(faces(w, r, h + LIFT), (col, shade(col, .55), shade(col, .75))))
+                    + f'<g transform="translate({tx:.1f} {tyb:.1f})"><rect width="{tw:.0f}" height="46" rx="8" fill="{PANEL}" stroke="{BORDER}"/>'
+                    f'<text x="13" y="20" fill="{TEXT}" font-family="{DISP}" font-size="14" font-weight="800">{l1}</text>'
+                    f'<text x="13" y="36" fill="{MUTED}" font-family="{MONO}" font-size="10.5">{l2}</text></g></g>')
+    kf = "".join(f"{pct(i*S):.2f}%{{transform:translate({path[i-1][0]:.1f}px,{path[i-1][1]:.1f}px)}}"
+                 f"{pct(i*S+.45):.2f}%,{pct((i+1)*S)-.05:.2f}%{{transform:translate({path[i][0]:.1f}px,{path[i][1]:.1f}px)}}"
+                 for i in range(len(path)))
+    end = f"translate({path[-1][0]:.1f}px,{path[-1][1]:.1f}px)"
+    css += (f"@keyframes cur{{{kf}100%{{transform:{end}}}}}"
+            f".cur{{transform:{end};animation:cur {TT:.1f}s cubic-bezier(.4,0,.2,1) {START}s infinite}}")
+    cursor = f'<g class="cur"><path d="M0 0L0 20L5.5 15L9 23L12.5 21.5L9 14L16 14Z" fill="#fff" stroke="{BG}" stroke-width="1.4"/></g>'
+
     # facts the stats tiles don't already show
+    busiest = max(cells, key=lambda t: t[2]["count"])
+    when = date.fromisoformat(busiest[2]["date"])
     names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     by_wd, by_m = [[] for _ in range(7)], {}
     for _, r, x in cells:
         by_wd[r].append(x["count"])
-        k = x["date"][:7]
-        by_m[k] = by_m.get(k, 0) + x["count"]
+        by_m[x["date"][:7]] = by_m.get(x["date"][:7], 0) + x["count"]
     wd = max(range(7), key=lambda i: sum(by_wd[i]) / max(1, len(by_wd[i])))
     bm = max(by_m, key=by_m.get)
     facts = [(str(busiest[2]["count"]), f"busiest day · {when:%b %d}", YELLOW),
@@ -664,8 +696,9 @@ def city(d):
     side += (f'<text x="40" y="{H-40}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">less</text>{legend}'
              f'<text x="166" y="{H-40}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">more</text>'
              f'<text x="40" y="{H-20}" fill="{MUTED}" font-family="{MONO}" font-size="10.5">1 building = 1 day · height = activity</text>')
-    body = card(W, H) + header("CONTRIBUTION CITY · 3D", "The skyline I built this year", W) + side + body_c
-    return svg(W, H, "Contribution city", body)
+    body = (card(W, H) + header("CONTRIBUTION CITY · 3D", "The skyline I built this year", W, "click to explore in 3D ↗")
+            + side + city_svg + overlay + cursor)
+    return svg(W, H, "Contribution city", body, css)
 
 
 def octicon(name, x, y, size, color):
@@ -766,6 +799,8 @@ def main():
             with open(os.path.join(OUT, name), "w", encoding="utf-8") as fh:
                 fh.write(content)
             print("wrote", name)
+    with open(os.path.join(OUT, "..", "docs", "contributions.json"), "w") as fh:  # data for the interactive city page
+        json.dump({"user": USER, "days": [x for x in d["days"] if x["date"] <= date.today().isoformat()]}, fh, separators=(",", ":"))
 
 
 if __name__ == "__main__":

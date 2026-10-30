@@ -417,8 +417,8 @@ def stack(d):
 PROJECTS = [  # name, tag, angle (deg, clockwise from east), radius fraction
     ("AirInsight", "air quality · CatBoost · IEEE paper", 25, .55),
     ("CrowdWatch AI", "crowd safety · computer vision", 75, .82),
-    ("AutoSOC", "attack graphs · vuln scanning", 130, .45),
-    ("SENTRIX", "data-exposure threat intel", 185, .78),
+    ("ThreatLens AI", "AI-agent security · drift detection", 130, .45),
+    ("VitalGrid", "ICU digital twin · neuro-symbolic AI", 185, .78),
     ("EnergySense", "energy forecasting · big data", 235, .5),
     ("AutoStylist", "AI wardrobe & outfit agent", 290, .85),
     ("Unmask", "crypto-hack OSINT · on-chain forensics", 335, .68),
@@ -465,9 +465,9 @@ CARDS = [  # name, repo, description, tags, badge
     ("AirInsight", "AirInsight-Intelligent-Air-Quality-Analytics-Platform",
      "CatBoost air-quality prediction network. 1st in Sustainability domain, Code Automata 2.1.",
      ["CatBoost", "real-time", "ML"], "IEEE PAPER"),
-    ("CrowdWatch AI", "CrowdWatch-AI",
-     "Real-time crowd monitoring, prediction and automated safety alerts for public transport.",
-     ["computer vision", "WebSocket"], ""),
+    ("ThreatLens AI", "ThreatLens-AI",
+     "Behavioral passport for AI agents: catches hijacks on the first action and contains them.",
+     ["AI agents", "security"], "● LIVE"),
     ("Unmask", "Unmask",
      "Traces crypto hacks by fusing OSINT chatter with on-chain wallet trails to name the hacker.",
      ["OSINT", "blockchain", "forensics"], "● LIVE"),
@@ -477,9 +477,9 @@ CARDS = [  # name, repo, description, tags, badge
     ("EnergySense", "Energy-Consumption-Forecasting",
      "Smart-home energy forecasting that turns household data into cost insights and trends.",
      ["forecasting", "big data", "Next.js"], "● LIVE"),
-    ("AI-SDPIP", "AI-SDPIP-Smart-Data-Processing-with-Intelligent-Automation",
-     "AI-powered survey data cleaning, missing-value imputation, estimation and automated reporting.",
-     ["Streamlit", "imputation", "stats"], "● LIVE"),
+    ("VitalGrid", "VitalGrid",
+     "ICU digital twin that predicts infrastructure failures and explains each failure path.",
+     ["digital twin", "GNN", "three.js"], "● LIVE"),
 ]
 
 
@@ -538,7 +538,7 @@ SHORT = {"Energy-Consumption-Forecasting": "EnergySense", "AirInsight-Intelligen
          "AutoSOC---AI-Based-Unified-Security-Monitoring-and-Vulnerability-Platform": "AutoSOC",
          "SENTRIX-Sensitive-Exposure-Threat-Intelligence-System": "SENTRIX",
          "AI-SDPIP-Smart-Data-Processing-with-Intelligent-Automation": "AI-SDPIP"}
-TIMELINE = set(SHORT) | {"EnviroPulse", "Portfolio", "FwdCheck", "Unmask"}  # finished work only; add new repos here
+TIMELINE = set(SHORT) | {"EnviroPulse", "Portfolio", "FwdCheck", "Unmask", "VitalGrid", "ThreatLens-AI"}  # finished work only; add new repos here
 
 
 def timeline(d):
